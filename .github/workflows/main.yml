@@ -19,6 +19,8 @@ jobs:
         run: echo "BASE_URL=localhost" > local.properties
 
       - uses: gradle/gradle-build-action@v2
+        with:
+          cache-read-only: true
 
       - name: Lint
         run: ./gradlew lint
@@ -47,6 +49,8 @@ jobs:
         run: echo "BASE_URL=localhost" > local.properties
 
       - uses: gradle/gradle-build-action@v2
+        with:
+          cache-read-only: true
 
       - name: Build project
         run: ./gradlew assembleDebug
