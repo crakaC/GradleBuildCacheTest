@@ -18,6 +18,8 @@ jobs:
       - name: Create dummy secrets
         run: echo "BASE_URL=localhost" > local.properties
 
+      - uses: gradle/gradle-build-action@v2
+
       - name: Lint
         run: ./gradlew lint
 
@@ -43,6 +45,8 @@ jobs:
 
       - name: Create dummy secrets
         run: echo "BASE_URL=localhost" > local.properties
+
+      - uses: gradle/gradle-build-action@v2
 
       - name: Build project
         run: ./gradlew assembleDebug
