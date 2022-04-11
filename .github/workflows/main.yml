@@ -5,7 +5,7 @@ concurrency:
   cancel-in-progress: true
 
 on:
-  push:
+  pull_request:
     branches: [main]
 
 jobs:
@@ -34,7 +34,7 @@ jobs:
       - name: Upload reports
         uses: actions/upload-artifact@v2
         with:
-          name: apk
+          name: reports
           path: app/build/reports/*
 
   build:

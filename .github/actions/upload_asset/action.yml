@@ -1,0 +1,31 @@
+name: 'Upload Asset'
+description: 'Upload asset to release'
+inputs:
+  upload_url:  # id of input
+    description: "url where to upload assets"
+    required: true
+  asset_path:
+    description: "path to asset"
+    required: true
+  asset_name:
+    description: "displayed asset name"
+    required: true
+  content_type:
+    description: "content-type"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Upload Assets
+      shell: bash
+      env:
+        URL: ${{ inputs.upload_url }}
+        ASSET_PATH: ${{ inputs.asset_path }}
+        ASSET_NAME: ${{ inputs.asset_name }}
+        CONTENT_TYPE: ${{ inputs.content_type }}
+      run: |
+        curl -H "Authorization: token ${{ github.TOKEN }}" \
+          -H "Content-Type: $CONTENT_TYPE" \
+          -H "Accept: application/vnd.github.v3+json" \
+          -F file=@$ASSET_PATH \
+          $URL?name=$ASSET_NAME

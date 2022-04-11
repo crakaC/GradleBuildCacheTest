@@ -1,0 +1,32 @@
+name: 'Create Release'
+description: 'Create release from specific tag'
+inputs:
+  url:
+    description: "API URL"
+    required: true
+  tag:  # id of input
+    description:
+    required: true
+
+outputs:
+  upload_url:
+    value: ${{ steps.create_release.outputs.upload_url }}
+    description: "url where to upload assets"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Create Release
+      id: create_release
+      env:
+        URL: ${{ inputs.url }}
+        TAG: ${{ inputs.tag }}
+      shell: bash
+      run: |
+        url=$( curl --silent -H "Authorization: token ${{ github.TOKEN }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          $URL -d "{\"tag_name\": \"$TAG\"}" \
+        | jq --raw-output .upload_url \
+        | sed -r "s/\{.*\}//g" )
+        echo $url
+        echo "::set-output name=upload_url::$(echo $url)"
