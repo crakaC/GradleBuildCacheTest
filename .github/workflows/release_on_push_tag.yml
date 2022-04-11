@@ -1,0 +1,43 @@
+name: Create release on push tag
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+       - name: Checkout
+         uses: actions/checkout@v3
+
+       - name: Copy CI gradle.properties
+         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
+
+       - name: Create dummy secrets
+         run: echo "BASE_URL=localhost" > local.properties
+
+       - uses: gradle/gradle-build-action@v2
+
+       - name: Assemble
+         run: ./gradlew assembleDebug
+
+       - name: Create Release
+         run: |
+           url=$( curl --silent -H "Authorization: token ${{ github.TOKEN }}" \
+             -H "Accept: application/vnd.github.v3+json" \
+             $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/releases \
+             -d "{\"tag_name\": \"$GITHUB_REF_NAME\"}" \
+           | jq --raw-output .upload_url \
+           | sed -r "s/\{.*\}//g" )
+           echo "URL=$url" >> $GITHUB_ENV
+
+       - name: Upload Assets
+         run: |
+           curl -H "Authorization: token ${{ github.TOKEN }}" \
+             -H "Content-Type: application/zip" \
+             -H "Accept: application/vnd.github.v3+json" \
+             -F file=@app/build/outputs/apk/debug/app-debug.apk \
+             $URL?name=debug.apk
