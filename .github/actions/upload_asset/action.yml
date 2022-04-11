@@ -1,21 +1,21 @@
-name: 'Upload Asset'
-description: 'Upload asset to release'
+name: Upload Asset
+description: Upload asset to release
 inputs:
-  upload_url:  # id of input
-    description: "url where to upload assets"
+  upload_url:
+    description: url where to upload assets
     required: true
   asset_path:
-    description: "path to asset"
+    description: path to asset
     required: true
   asset_name:
-    description: "displayed asset name"
+    description: displayed asset name
     required: true
   label:
     description: label
     required: false
     default: ""
   content_type:
-    description: "content-type"
+    description: content-type
     required: true
 runs:
   using: "composite"

@@ -1,5 +1,5 @@
-name: 'Create Release'
-description: 'Create release from specific tag'
+name: Create Release
+description: Create release from specific tag
 inputs:
   url:
     description: API URL
@@ -11,7 +11,7 @@ inputs:
 outputs:
   upload_url:
     value: ${{ steps.create_release.outputs.upload_url }}
-    description: "url where to upload assets"
+    description: URL where to upload assets
 
 runs:
   using: "composite"

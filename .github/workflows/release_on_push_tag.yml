@@ -10,45 +10,45 @@ jobs:
     timeout-minutes: 30
 
     steps:
-       - name: Checkout
-         uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-       - name: Copy CI gradle.properties
-         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
+      - name: Copy CI gradle.properties
+        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
-       - name: Create dummy secrets
-         run: echo "BASE_URL=localhost" > local.properties
+      - name: Create dummy secrets
+        run: echo "BASE_URL=localhost" > local.properties
 
-       - uses: gradle/gradle-build-action@v2
+      - uses: gradle/gradle-build-action@v2
 
-       - name: Build
-         run: ./gradlew build
+      - name: Build
+        run: ./gradlew build
 
-       - name: Create Release
-         id: create_release
-         uses: ./.github/actions/create_release
-         with:
-           url: ${{ github.api_url }}/repos/${{ github.repository }}/releases
-           tag: ${{ github.ref_name }}
+      - name: Create Release
+        id: create_release
+        uses: ./.github/actions/create_release
+        with:
+          url: ${{ github.api_url }}/repos/${{ github.repository }}/releases
+          tag: ${{ github.ref_name }}
 
-       - name: Upload debug.apk
-         uses: ./.github/actions/upload_asset
-         env:
-           URL: ${{ steps.create_release.outputs.upload_url }}
-         with:
-           upload_url: ${{ env.URL }}
-           asset_path: app/build/outputs/apk/debug/app-debug.apk
-           asset_name: debug.apk
-           label: debug
-           content_type: application/zip
+      - name: Upload debug.apk
+        uses: ./.github/actions/upload_asset
+        env:
+          URL: ${{ steps.create_release.outputs.upload_url }}
+        with:
+          upload_url: ${{ env.URL }}
+          asset_path: app/build/outputs/apk/debug/app-debug.apk
+          asset_name: debug.apk
+          label: debug
+          content_type: application/zip
 
-       - name: Upload release-unsigned.apk
-         uses: ./.github/actions/upload_asset
-         env:
-           URL: ${{ steps.create_release.outputs.upload_url }}
-         with:
-           upload_url: ${{ env.URL }}
-           asset_path: app/build/outputs/apk/release/app-release-unsigned.apk
-           asset_name: release-unsigned.apk
-           label: release
-           content_type: application/zip
+      - name: Upload release-unsigned.apk
+        uses: ./.github/actions/upload_asset
+        env:
+          URL: ${{ steps.create_release.outputs.upload_url }}
+        with:
+          upload_url: ${{ env.URL }}
+          asset_path: app/build/outputs/apk/release/app-release-unsigned.apk
+          asset_name: release-unsigned.apk
+          label: release
+          content_type: application/zip
