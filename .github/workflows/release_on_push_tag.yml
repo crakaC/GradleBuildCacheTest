@@ -39,6 +39,7 @@ jobs:
            upload_url: ${{ env.URL }}
            asset_path: app/build/outputs/apk/debug/app-debug.apk
            asset_name: debug.apk
+           label: debug
            content_type: application/zip
 
        - name: Upload release-unsigned.apk
@@ -49,4 +50,5 @@ jobs:
            upload_url: ${{ env.URL }}
            asset_path: app/build/outputs/apk/release/app-release-unsigned.apk
            asset_name: release-unsigned.apk
+           label: release
            content_type: application/zip

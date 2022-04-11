@@ -2,10 +2,10 @@ name: 'Create Release'
 description: 'Create release from specific tag'
 inputs:
   url:
-    description: "API URL"
+    description: API URL
     required: true
-  tag:  # id of input
-    description:
+  tag:
+    description: Tag to release
     required: true
 
 outputs:

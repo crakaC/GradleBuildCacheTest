@@ -10,6 +10,10 @@ inputs:
   asset_name:
     description: "displayed asset name"
     required: true
+  label:
+    description: label
+    required: false
+    default: ""
   content_type:
     description: "content-type"
     required: true
@@ -22,10 +26,11 @@ runs:
         URL: ${{ inputs.upload_url }}
         ASSET_PATH: ${{ inputs.asset_path }}
         ASSET_NAME: ${{ inputs.asset_name }}
+        LABEL: ${{ inputs.label }}
         CONTENT_TYPE: ${{ inputs.content_type }}
       run: |
         curl -H "Authorization: token ${{ github.TOKEN }}" \
           -H "Content-Type: $CONTENT_TYPE" \
           -H "Accept: application/vnd.github.v3+json" \
           -F file=@$ASSET_PATH \
-          $URL?name=$ASSET_NAME
+          $URL?name=$ASSET_NAME&label=$LABEL
