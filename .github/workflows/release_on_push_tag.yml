@@ -32,7 +32,6 @@ jobs:
           TAG=${GITHUB_REF#refs/tags/}
           PREVIOUS_TAG= #$(git tag --sort=-creatordate | sed -n 2p)
           COMMIT_SUMMARY="$(git log --oneline --pretty=tformat:"%h %s")"
-          COMMIT_SUMMARY="${COMMIT_SUMMARY//$'\n'/'\\n'}"
           echo ::set-output name=COMMIT_SUMMARY::$COMMIT_SUMMARY
 
       - name: Create Release
@@ -40,8 +39,7 @@ jobs:
         uses: ./.github/actions/create_release
         with:
           tag: ${{ github.ref_name }}
-          body: |
-            ${{ steps.get_commit_summary.outputs.COMMIT_SUMMARY }}
+          body: ${{ steps.get_commit_summary.outputs.COMMIT_SUMMARY }}
 
       - name: Upload debug.apk
         uses: ./.github/actions/upload_asset
