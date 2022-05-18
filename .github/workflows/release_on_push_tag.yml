@@ -32,7 +32,7 @@ jobs:
           TAG=${GITHUB_REF#refs/tags/}
           PREVIOUS_TAG= #$(git tag --sort=-creatordate | sed -n 2p)
           COMMIT_SUMMARY="$(git log --oneline --pretty=tformat:"%h %s")"
-          COMMIT_SUMMARY="${COMMIT_SUMMARY//$'\n'/'%0A'}"
+          COMMIT_SUMMARY="${COMMIT_SUMMARY//$'\n'/'\\n'}"
           echo ::set-output name=COMMIT_SUMMARY::$COMMIT_SUMMARY
 
       - name: Create Release
