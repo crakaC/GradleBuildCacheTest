@@ -21,42 +21,31 @@ jobs:
       - name: Create dummy secrets
         run: echo "BASE_URL=localhost" > local.properties
 
-#      - uses: gradle/gradle-build-action@v2
-#
-#      - name: Build
-#        run: ./gradlew build
+      - uses: gradle/gradle-build-action@v2
+
+      - name: Build
+        run: ./gradlew build
+#        run: |
+#          mkdir -p app/build/outputs/apk/{debug,release}
+#          echo "debug" > app/build/outputs/apk/debug/app-debug.apk
+#          echo "release" > app/build/outputs/apk/release/app-release-unsigned.apk
 
       - name: Get commit summary
         id: get_commit_summary
         run: |
           TAG=${GITHUB_REF#refs/tags/}
+          echo $TAG
           PREVIOUS_TAG= #$(git tag --sort=-creatordate | sed -n 2p)
           git log --oneline --pretty=tformat:"%h %s" > commit_summary
+          echo ::set-output name=TAG::$TAG
           echo ::set-output name=COMMIT_SUMMARY::$(realpath commit_summary)
 
       - name: Create Release
         id: create_release
-        uses: ./.github/actions/create_release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag: ${{ github.ref_name }}
-          body: ${{ steps.get_commit_summary.outputs.COMMIT_SUMMARY }}
-
-      - name: Upload debug.apk
-        uses: ./.github/actions/upload_asset
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: app/build/outputs/apk/debug/app-debug.apk
-          asset_name: debug.apk
-          label: debug
-          content_type: application/zip
-
-      - name: Upload release-unsigned.apk
-        uses: ./.github/actions/upload_asset
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: app/build/outputs/apk/release/app-release-unsigned.apk
-          asset_name: release-unsigned.apk
-          label: release
-          content_type: application/zip
+        run: |
+          gh release create ${{ steps.get_commit_summary.outputs.TAG }} \
+            --generate-notes \
+            app/build/outputs/apk/debug/app-debug.apk \
+            app/build/outputs/apk/release/app-release-unsigned.apk
