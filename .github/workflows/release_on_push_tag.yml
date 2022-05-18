@@ -31,15 +31,16 @@ jobs:
         run: |
           TAG=${GITHUB_REF#refs/tags/}
           PREVIOUS_TAG= #$(git tag --sort=-creatordate | sed -n 2p)
-          COMMIT_SUMMARY="$(git log --oneline --pretty=tformat:"%h %s")"
-          echo ::set-output name=COMMIT_SUMMARY::$COMMIT_SUMMARY
+          echo 'COMMIT_SUMMARY<<EOF_COMMIT_SUMMARY' >> $GITHUB_ENV
+          git log --oneline --pretty=tformat:"%h %s" >> $GITHUB_ENV
+          echo 'EOF_COMMIT_SUMMARY' >> $GITHUB_ENV
 
       - name: Create Release
         id: create_release
         uses: ./.github/actions/create_release
         with:
           tag: ${{ github.ref_name }}
-          body: ${{ steps.get_commit_summary.outputs.COMMIT_SUMMARY }}
+          body: ${{ env.COMMIT_SUMMARY }}
 
       - name: Upload debug.apk
         uses: ./.github/actions/upload_asset
