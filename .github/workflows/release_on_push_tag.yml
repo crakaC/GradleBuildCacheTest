@@ -30,22 +30,12 @@ jobs:
 #          echo "debug" > app/build/outputs/apk/debug/app-debug.apk
 #          echo "release" > app/build/outputs/apk/release/app-release-unsigned.apk
 
-      - name: Get commit summary
-        id: get_commit_summary
-        run: |
-          TAG=${GITHUB_REF#refs/tags/}
-          echo $TAG
-          PREVIOUS_TAG= #$(git tag --sort=-creatordate | sed -n 2p)
-          git log --oneline --pretty=tformat:"%h %s" > commit_summary
-          echo ::set-output name=TAG::$TAG
-          echo ::set-output name=COMMIT_SUMMARY::$(realpath commit_summary)
-
       - name: Create Release
         id: create_release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create ${{ steps.get_commit_summary.outputs.TAG }} \
+          gh release create ${GITHUB_REF#refs/tags/} \
             --generate-notes \
             app/build/outputs/apk/debug/app-debug.apk \
             app/build/outputs/apk/release/app-release-unsigned.apk
