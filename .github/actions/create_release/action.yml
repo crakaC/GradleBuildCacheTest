@@ -23,11 +23,11 @@ runs:
       run: |
         body=$(cat ${{ inputs.body }})
         echo $body
-        url=$( curl -v -H "Authorization: token ${{ github.TOKEN }}" \
+        url=$(gh api --method POST \
           -H "Accept: application/vnd.github.v3+json" \
-          -H "Content-Type: application/json" \
-          -d "{\"tag_name\": \"${{ inputs.tag }}\", \"body\": \"$body\"}" \
-          ${{ github.api_url }}/repos/${{ github.repository }}/releases \
+          /repos/${{ github.repository }}/releases \
+          -f tag_name='${{ inputs.tag }}' \
+          -f body="$body" \
         | jq --raw-output .upload_url \
         | sed -r "s/\{.*\}//g" )
         echo $url
