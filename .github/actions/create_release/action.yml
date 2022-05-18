@@ -1,12 +1,13 @@
 name: Create Release
 description: Create release from specific tag
 inputs:
-  url:
-    description: API URL
-    required: true
   tag:
     description: Tag to release
     required: true
+  body:
+    description: Body of release
+    required: false
+    default: ""
 
 outputs:
   upload_url:
@@ -18,15 +19,13 @@ runs:
   steps:
     - name: Create Release
       id: create_release
-      env:
-        URL: ${{ inputs.url }}
-        TAG: ${{ inputs.tag }}
       shell: bash
       run: |
         url=$( curl --silent -H "Authorization: token ${{ github.TOKEN }}" \
           -H "Accept: application/vnd.github.v3+json" \
-          $URL -d "{\"tag_name\": \"$TAG\"}" \
+          -d "{\"tag_name\": \"${{ inputs.tag }}\"}" \
+          ${{ github.api_url }}/repos/${{ github.repository }}/releases \
         | jq --raw-output .upload_url \
         | sed -r "s/\{.*\}//g" )
-        echo $url
+        echo url
         echo "::set-output name=upload_url::$(echo $url)"

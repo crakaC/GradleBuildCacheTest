@@ -22,15 +22,9 @@ runs:
   steps:
     - name: Upload Assets
       shell: bash
-      env:
-        URL: ${{ inputs.upload_url }}
-        ASSET_PATH: ${{ inputs.asset_path }}
-        ASSET_NAME: ${{ inputs.asset_name }}
-        LABEL: ${{ inputs.label }}
-        CONTENT_TYPE: ${{ inputs.content_type }}
       run: |
         curl -H "Authorization: token ${{ github.TOKEN }}" \
-          -H "Content-Type: $CONTENT_TYPE" \
+          -H "Content-Type: ${{ inputs.content_type }}" \
           -H "Accept: application/vnd.github.v3+json" \
-          -F file=@$ASSET_PATH \
-          $URL?name=$ASSET_NAME&label=$LABEL
+          -F file=@${{ inputs.asset_path }} \
+          ${{ inputs.upload_url }}?name=${{ inputs.asset_name }}&label=${{ inputs.label }}
