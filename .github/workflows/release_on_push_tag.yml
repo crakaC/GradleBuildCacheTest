@@ -40,7 +40,8 @@ jobs:
         uses: ./.github/actions/create_release
         with:
           tag: ${{ github.ref_name }}
-          body: ${{ steps.get_commit_summary.outputs.COMMIT_SUMMARY }}
+          body: |
+            ${{ steps.get_commit_summary.outputs.COMMIT_SUMMARY }}
 
       - name: Upload debug.apk
         uses: ./.github/actions/upload_asset
