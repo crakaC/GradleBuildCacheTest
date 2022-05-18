@@ -43,10 +43,8 @@ jobs:
 
       - name: Upload debug.apk
         uses: ./.github/actions/upload_asset
-        env:
-          URL: ${{ steps.create_release.outputs.upload_url }}
         with:
-          upload_url: ${{ env.URL }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: app/build/outputs/apk/debug/app-debug.apk
           asset_name: debug.apk
           label: debug
@@ -54,10 +52,8 @@ jobs:
 
       - name: Upload release-unsigned.apk
         uses: ./.github/actions/upload_asset
-        env:
-          URL: ${{ steps.create_release.outputs.upload_url }}
         with:
-          upload_url: ${{ env.URL }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: app/build/outputs/apk/release/app-release-unsigned.apk
           asset_name: release-unsigned.apk
           label: release
