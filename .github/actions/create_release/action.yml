@@ -23,7 +23,7 @@ runs:
       run: |
         url=$( curl --silent -H "Authorization: token ${{ github.TOKEN }}" \
           -H "Accept: application/vnd.github.v3+json" \
-          -d "{\"tag_name\": \"${{ inputs.tag }}\"}" \
+          -d '{"tag_name": "${{ inputs.tag }}", "body": "${{ inputs.body }}"}' \
           ${{ github.api_url }}/repos/${{ github.repository }}/releases \
         | jq --raw-output .upload_url \
         | sed -r "s/\{.*\}//g" )
