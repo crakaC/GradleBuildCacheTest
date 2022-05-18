@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Copy CI gradle.properties
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
@@ -19,10 +21,10 @@ jobs:
       - name: Create dummy secrets
         run: echo "BASE_URL=localhost" > local.properties
 
-      - uses: gradle/gradle-build-action@v2
-
-      - name: Build
-        run: ./gradlew build
+#      - uses: gradle/gradle-build-action@v2
+#
+#      - name: Build
+#        run: ./gradlew build
 
       - name: Get commit summary
         id: get_commit_summary
