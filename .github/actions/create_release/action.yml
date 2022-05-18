@@ -21,11 +21,13 @@ runs:
       id: create_release
       shell: bash
       run: |
-        body="${{ inputs.body }}"
-        url=$( curl --silent -H "Authorization: token ${{ github.TOKEN }}" \
+        body=$(cat ${{ inputs.body }})
+        echo $body
+        url=$(gh api --method POST \
           -H "Accept: application/vnd.github.v3+json" \
-          -d "{\"tag_name\": \"${{ inputs.tag }}\", \"body\": \"$body\"}" \
-          ${{ github.api_url }}/repos/${{ github.repository }}/releases \
+          /repos/${{ github.repository }}/releases \
+          -f tag_name='${{ inputs.tag }}' \
+          -f body="$body" \
         | jq --raw-output .upload_url \
         | sed -r "s/\{.*\}//g" )
         echo $url
