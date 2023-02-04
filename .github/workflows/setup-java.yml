@@ -1,0 +1,25 @@
+name: Firebase App
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo BEFORE $JAVA_HOME
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - run: echo AFTER $JAVA_HOME
+  java-home:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo $JAVA_HOME
