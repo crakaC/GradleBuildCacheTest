@@ -1,4 +1,4 @@
-name: Firebase App
+name: Setup Java
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
